@@ -54,11 +54,7 @@
 </template>
 
 <script>
-import Message from '../../../components/Message.vue';
 export default {
-    components: {
-        Message
-    },
     data() {
         return {
             basicForm: {

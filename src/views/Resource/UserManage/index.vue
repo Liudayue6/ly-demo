@@ -56,15 +56,15 @@
           </div>
           <!-- 搜索区域 -->
           <div class="search">
-            <el-select v-model="value1" placeholder="请选择账号状态" style="width: 160px; margin-left: 249px">
+            <el-select v-model="value1" placeholder="请选择账号状态" style="width: 160px; margin-left: 249px" clearable>
               <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
-            <el-select v-model="value2" placeholder="请选择账号角色" style="width: 160px; margin-left: 8px">
+            <el-select v-model="value2" placeholder="请选择账号角色" style="width: 160px; margin-left: 8px" clearable>
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
-            <el-input placeholder="搜索用户姓名/账号名称" suffix-icon="el-icon-search" v-model="input2"
+            <el-input placeholder="搜索用户姓名/账号名称" suffix-icon="el-icon-search" v-model="input"
               style="width: 200px; margin-left: 8px">
             </el-input>
           </div>
@@ -72,7 +72,7 @@
           <div class="table">
             <!-- 表格 -->
             <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark"
-              style="width: 100%;border:1px solid #ebeef5;padding: 0 10px;" @selection-change="handleSelectionChange">
+              @selection-change="handleSelectionChange">
               <el-table-column type="selection" width="55"> </el-table-column>
               <el-table-column prop="userName" label="用户姓名" width="100" show-overflow-tooltip> </el-table-column>
               <el-table-column prop="nickName" label="账号名称" width="120" show-overflow-tooltip></el-table-column>
@@ -97,9 +97,9 @@
                 </template>
               </el-table-column>
             </el-table>
-            <!-- 分页 -->
-            <MyPagination @changePage="changePage"></MyPagination>
           </div>
+          <!-- 分页 -->
+          <MyPagination @changePage="changePage"></MyPagination>
         </div>
       </div>
       <!-- 编辑弹窗 -->
@@ -196,7 +196,8 @@ export default {
       },
       data: JSON.parse(JSON.stringify(data)),
       title: "删除",
-      fontColor: "red"
+      fontColor: "red",
+      input: ""
     };
   },
   methods: {
@@ -304,10 +305,8 @@ export default {
   background-color: #f0f2f5;
 
   .outer-container {
-    width: 1240px;
-    height: 650px;
-    margin: 0 auto;
-    margin-top: 85px;
+    width: 100%;
+    margin-top: 30px;
 
     .title {
       line-height: 60px;
@@ -320,16 +319,15 @@ export default {
     }
 
     .inner-container {
-      height: 570px;
+      height: 65vh;
       background-color: #fff;
       display: flex;
-      padding: 25px 10px 0 25px;
+      padding: 25px 20px 50px;
       border-radius: 4px;
 
       .organ {
         box-sizing: border-box;
-        width: 400px;
-        height: 520px;
+        width: 300px;
         border: 1px solid rgba(215, 215, 215, 1);
         border-radius: 4px;
         padding: 15px;
@@ -352,20 +350,17 @@ export default {
       }
 
       .manage {
+        flex: 1;
         margin-left: 20px;
-        // width: 775px;
-        height: 560px;
-
-        // border: 1px solid black;
+        overflow: hidden;
         .button {
-          font-size: 15px;
 
           i {
             margin-right: 2px;
           }
 
           .filter {
-            margin-left: 60px;
+            float: right;
           }
         }
 
@@ -374,7 +369,9 @@ export default {
         }
 
         .table {
-          width: 785px;
+          width: 100%;
+          border:1px solid #ebeef5;
+          padding: 0 10px;
         }
       }
     }

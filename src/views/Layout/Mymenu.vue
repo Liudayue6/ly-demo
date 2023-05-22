@@ -1,11 +1,14 @@
 <template>
   <div class="my-menu">
+    <!-- 菜单栏收缩按钮 -->
     <div class="control">
-      <i v-if="!isCollapse" @click="changeMenu" class="iconfont icon-right-indent"></i>
-      <i v-else @click="changeMenu" class="iconfont icon-left-indent"></i>
+      <el-button type="primary" size="mini" @click="changeMenu">
+        <i v-if="!isCollapse" class="icon el-icon-s-fold"></i>
+        <i v-else class="icon el-icon-s-unfold"></i>
+      </el-button>
     </div>
-    <el-menu :default-active="$route.path" class="el-menu-vertical-demo" background-color="#285450" text-color="#fff"
-      router :collapse="isCollapse">
+    <!-- 菜单栏 -->
+    <el-menu :default-active="$route.path" class="el-menu-vertical-demo" background-color="#285450" text-color="#fff" router :collapse="isCollapse">
       <el-submenu index="/">
         <template slot="title">
           <i class="el-icon-location"></i>
@@ -54,20 +57,22 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.my-menu {
+.my-menu{
   position: relative;
-  padding-top: 50px;
-
+}
   .control {
     position: absolute;
-    right: 20px;
+    right: 10px;
     top: 15px;
     z-index: 999;
     cursor: pointer;
 
-    .iconfont {
-      font-size: 28px;
-      color: #25AEA6;
+    .el-button--mini{
+      padding: 5px 10px;
+    }
+
+    .icon {
+      font-size: 22px;
     }
   }
 
@@ -82,7 +87,5 @@ export default {
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
-    min-height: 400px;
   }
-}
 </style>

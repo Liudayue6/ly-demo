@@ -1,34 +1,36 @@
 <template>
-<div class="layout">
-    <!-- 头部导航区域 -->
-    <Head></Head>
-    <!-- 主体区域 -->
-    <div class="mainBody">
-        <!-- 左侧导航区域 -->
-        <MyMenu class="menu" :isCollapse='isCollapse' @changeCollapse='changeCollapse'/>
-        <!-- 右侧内容区域 -->
-        <Content class="content" :class="{isActive:isCollapse}"/>
+    <div class="layout">
+        <!-- 头部导航区域 -->
+        <div class="head">
+            <div class="head-left">
+                <div class="image"></div>
+                <div class="title">云存储平台</div>
+            </div>
+        </div>
+        <div class="mainBody">
+            <!-- 左侧导航区域 -->
+            <MyMenu class="menu" :isCollapse='isCollapse' @changeCollapse='changeCollapse' />
+            <!-- 右侧内容区域 -->
+            <div class="content" :class="{ isActive: isCollapse }">
+                <router-view />
+            </div>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
-import Head from "./head.vue";
 import MyMenu from './Mymenu.vue'
-import Content from './Content.vue'
 export default {
-    components:{
-        Head,
-        MyMenu,
-        Content
+    components: {
+        MyMenu
     },
-    data(){
+    data() {
         return {
-            isCollapse:false,
+            isCollapse: false,
         }
     },
-    methods:{
-        changeCollapse(){
+    methods: {
+        changeCollapse() {
             this.isCollapse = !this.isCollapse;
         }
     }
@@ -36,23 +38,51 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.layout{
-    .menu{
-        // width: 200px;
-        // min-height: 500px;
-        background: #285450;
-        position: fixed;
-        top:65px;
-        bottom:0;
-    }
-    .content{
-        margin-top: 65px;
-        margin-left: 200px;
-        transition: all 0.3s;
-    }
-    .isActive{
-        margin-left: 64px;
-    }
-}
 
-</style>
+.layout {
+    width: 100%;
+    .head {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        line-height: 8vh;
+        background-color: #2A4C45;
+
+        .head-left {
+            display: flex;
+            color: #FFFFFF;
+            align-items: center;
+            margin-left: 30px;
+            font-size: 18px;
+
+            .image {
+                width: 27px;
+                height: 27px;
+                background-color: #fff;
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .mainBody {
+        width: 100%;
+        display: flex;
+        height: 92vh;
+
+        .menu {
+            background: #285450;
+            padding-top: 50px;
+        }
+
+        .content {
+            width: calc(100% - 280px);
+            margin: 0 40px;
+            transition: all 0.3s;
+        }
+
+        .isActive {
+            margin: 0 64px;
+        }
+    }
+}</style>
