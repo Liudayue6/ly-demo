@@ -11,22 +11,21 @@
             </el-input>
           </div>
           <!-- 树形控件 -->
-          <el-tree :data="data" node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps"
-            :filter-node-method="filterNode" class="filter-tree" ref="tree">
+          <el-tree :data="data" node-key="id" default-expand-all :expand-on-click-node="false" :props="defaultProps" :filter-node-method="filterNode" class="filter-tree" ref="tree">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span>
                 <!-- 编辑组织 -->
                 <el-button type="text" size="mini" @click="() => edit(data)">
-                  <i class="el-icon-edit" style="color:#a2a2a2; margin-left: 10px;"></i>
+                  <i class="el-icon-edit ic1 ic"></i>
                 </el-button>
                 <!-- 删除组织 -->
                 <el-button type="text" size="mini" @click="() => remove(node, data)">
-                  <i class="el-icon-remove" style="color:#a2a2a2;"></i>
+                  <i class="el-icon-remove ic"></i>
                 </el-button>
                 <!-- 添加组织 -->
                 <el-button type="text" size="mini" @click="() => append(data)">
-                  <i class="el-icon-circle-plus" style="color:#a2a2a2;"></i>
+                  <i class="el-icon-circle-plus ic"></i>
                 </el-button>
               </span>
             </span>
@@ -36,13 +35,11 @@
         <div class="manage">
           <!-- 按钮区域 -->
           <div class="button">
-            <router-link to="/add-user" style="color: #fff">
-              <el-button type="primary"><i class="el-icon-document-add"></i>创建用户</el-button>
-            </router-link>
-            <el-upload style="display: inline-block;" multiple accept=".xls"><el-button class="gap"><i
+            <el-button type="primary" @click="handleAdd"><i class="el-icon-document-add"></i>创建用户</el-button>
+            <el-upload style="display: inline-block;" multiple accept=".xls" action="#"><el-button class="gap"><i
                   class="el-icon-upload2"></i>批量导入</el-button></el-upload>
-            <el-button class="gap" @click="handleDownload"><i class="el-icon-download"></i>下载模板</el-button>
-            <el-button :disabled="selectControl"><i class="el-icon-download"></i>批量导出</el-button>
+            <el-button class="gap" @click="downloadFile"><i class="el-icon-download"></i>下载模板</el-button>
+            <el-button :disabled="selectControl" @click="downloadData"><i class="el-icon-download"></i>批量导出</el-button>
             <!-- 批量管理 -->
             <el-dropdown class="gap" @command="handleCommand" :disabled="selectControl">
               <el-button>批量管理<i class="el-icon-arrow-down el-icon--right"></i></el-button>
@@ -53,7 +50,8 @@
               </el-dropdown-menu>
             </el-dropdown>
             <el-button class="filter" @click="searchControl">
-              筛选查询<i class="el-icon-arrow-up el-icon--right" v-if="!isShow"></i>
+              筛选查询
+              <i class="el-icon-arrow-up el-icon--right" v-if="!isShow"></i>
               <i class="el-icon-arrow-down el-icon--right" v-else></i>
             </el-button>
           </div>
@@ -88,13 +86,10 @@
                 <template slot-scope="scope">
                   <el-button size="medium" type="text" @click="handleCheck(scope.$index, scope.row)">查看</el-button>
                   <el-button size="medium" @click="handleEdit(scope.$index, scope.row)" type="text">编辑</el-button>
-                  <el-button size="medium" type="text" v-if="scope.row.status === '启用'" style="color:orange;"
-                    @click="ban(scope.row)">禁用</el-button>
-                  <el-button size="medium" type="text" v-else style="color:#67c7b3;"
-                    @click="start(scope.row)">启用</el-button>
+                  <el-button size="medium" type="text" v-if="scope.row.status === '启用'" style="color:orange;" @click="ban(scope.row)">禁用</el-button>
+                  <el-button size="medium" type="text" v-else style="color:#67c7b3;" @click="start(scope.row)">启用</el-button>
                   <el-button size="medium" type="text">下载私钥</el-button>
-                  <el-button size="medium" @click="handleDelete(scope.$index, scope.row)" type="text"
-                    style="color:red;">删除</el-button>
+                  <el-button size="medium" @click="handleDelete(scope.$index, scope.row)" type="text" style="color:red;">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -196,12 +191,21 @@ export default {
     };
   },
   methods: {
+    /* 创建用户 */
+    handleAdd() {
+      this.$router.push({
+        path: '/user-message',
+        query: {
+          title: "创建用户"
+        }
+      })
+    },
     /* 用户查看操作 */
     handleCheck(index, row) {
       this.$router.push({
         path: '/details',
         query: {
-          message: { ...row }
+          id: index
         }
       })
     },
@@ -209,9 +213,10 @@ export default {
     handleEdit(index, row) {
       // console.log(index, row);
       this.$router.push({
-        path: '/edit-user',
+        path: '/user-message',
         query: {
-          rowData: { ...row }
+          title: "编辑用户",
+          id: index
         }
       })
     },
@@ -309,7 +314,26 @@ export default {
     searchControl() {
       this.isShow = !this.isShow
     },
-    /* 下载mob */
+    /* 下载模板 */
+    downloadFile() {
+      const a1 = document.createElement('a')
+      const event1 = new MouseEvent('click')
+      a1.download = '文件名称'
+      a1.href = 'https://img1.baidu.com/it/u=1960110688,1786190632&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281'
+      a1.target = '_blank'
+      a1.dispatchEvent(event1)
+    },
+    /* 批量导出 */
+    downloadData() {
+      if (!this.selectControl) {
+        const a2 = document.createElement('a')
+        const event2 = new MouseEvent('click')
+        a2.download = '文件名称'
+        a2.href = 'https://img1.baidu.com/it/u=1960110688,1786190632&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281'
+        a2.target = '_blank'
+        a2.dispatchEvent(event2)
+      }
+    }
   },
   /* 树形控件输入过滤 */
   watch: {
@@ -338,7 +362,6 @@ export default {
     }
 
     .inner-container {
-      // height: 70vh;
       background-color: #fff;
       display: flex;
       padding: 25px 20px 30px;
@@ -350,6 +373,14 @@ export default {
         border: 1px solid rgba(215, 215, 215, 1);
         border-radius: 4px;
         padding: 15px;
+
+        .ic1 {
+          margin-left: 10px;
+        }
+
+        .ic {
+          color: #a2a2a2;
+        }
 
         .name {
           font-size: 15px;

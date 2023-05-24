@@ -8,9 +8,8 @@ const Plan = () => import('../views/Plan/Plan.vue')
 const Synthesis = () => import('../views/Synthesis/Synthesis.vue')
 const UserManage = () => import('../views/Resource/UserManage/index.vue')
 const QueManage = () => import('../views/Resource/QueManage/index.vue')
-const AddUser = () => import('../views/Resource/UserManage/AddUser.vue')
-const EditUser = () => import('../views/Resource/UserManage/EditUser.vue')
 const Details = () => import('../views/Resource/UserManage/Details.vue')
+const UserMessage = () => import('../views/Resource/UserManage/UserMessage.vue')
 
 Vue.use(VueRouter)
 
@@ -43,25 +42,17 @@ const routes = [
             }
           },
           {
-            path: '/add-user',
-            name: 'AddUser',
-            component: AddUser,
-            meta: {
-              name: "user"
-            }
-          },
-          {
-            path: '/edit-user',
-            name: 'EditUser',
-            component: EditUser,
-            meta: {
-              name: "user"
-            }
-          },
-          {
             path: '/details',
             name: 'Details',
             component: Details,
+            meta: {
+              name: "user"
+            }
+          },
+          {
+            path: '/user-message',
+            name: 'UserMessage',
+            component: UserMessage,
             meta: {
               name: "user"
             }

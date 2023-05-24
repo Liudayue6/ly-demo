@@ -15,8 +15,8 @@
             <div class="message">
                 <div class="simple">
                     <span>基本信息</span>
-                    <span style="float: right;margin-left: 20px;">创建时间：{{ message.time }}</span>
-                    <span style="float: right;">创建账号：{{ message.account }}</span>
+                    <span class="time">创建时间：{{ message.time }}</span>
+                    <span class="account">创建账号：{{ message.account }}</span>
                 </div>
                 <ul class="more">
                     <li>用户名称：<span>{{ message.userName }}</span></li>
@@ -42,10 +42,12 @@
 </template>
 
 <script>
+import tableData from '../../../mock/tableData.js';
 export default {
     data() {
         return {
             message: {},
+            tableData
         }
     },
     computed: {
@@ -54,7 +56,7 @@ export default {
         }
     },
     created() {
-        this.message = this.$route.query.message
+        this.message = this.tableData.find(item => item.id == this.$route.query.id)
     },
     methods:{
         /* 返回操作 */
@@ -85,7 +87,7 @@ export default {
 }
 
 .content {
-    height: 500px;
+    height: 58vh;
     background-color: #fff;
     border-radius: 4px;
     padding: 30px;
@@ -101,6 +103,13 @@ export default {
             padding: 0 20px;
             background-color: #f9f9fc;
             color: #5A5B5F;
+            .time{
+                float: right;
+                margin-left: 20px;
+            }
+            .account{
+                float: right;
+            }
         }
 
         .more {
