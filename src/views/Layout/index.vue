@@ -9,7 +9,7 @@
         </div>
         <div class="mainBody">
             <!-- 左侧导航区域 -->
-            <MyMenu class="menu" :isCollapse='isCollapse' @changeCollapse='changeCollapse' />
+            <MyMenu class="menu" :isCollapse="isCollapse" @changeCollapse='changeCollapse' />
             <!-- 右侧内容区域 -->
             <div class="content" :class="{ isActive: isCollapse }">
                 <router-view />
@@ -42,10 +42,6 @@ export default {
 .layout {
     width: 100%;
     .head {
-        position: relative;
-        top: 0;
-        left: 0;
-        right: 0;
         line-height: 8vh;
         background-color: #2A4C45;
 
@@ -77,12 +73,12 @@ export default {
 
         .content {
             width: calc(100% - 280px);
-            margin: 0 40px;
+            margin: 30px 40px;
             transition: all 0.3s;
         }
 
         .isActive {
-            margin: 0 64px;
+            margin: 30px 100px;
         }
     }
 }</style>

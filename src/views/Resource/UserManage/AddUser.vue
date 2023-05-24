@@ -140,25 +140,18 @@ export default {
 
 <style lang="less" scoped>
 .add-user {
-    width: 1220px;
-    height: 680px;
-    margin: 0 auto;
-    margin-top: 90px;
     background-color: #fff;
+    padding: 0 30px 10px;
 
     .title {
         line-height: 60px;
         font-size: 16px;
-        margin: 0 30px;
         border-bottom: 1px solid #d7d7d7;
     }
 
     .myForm {
         background-color: #fafbfc;
-        width: 1160px;
-        height: 536px;
-        margin: 0 auto;
-        margin-top: 20px;
+        margin: 20px 0;
         border: 1px solid #d7d7d7;
 
         /deep/.el-form-item__label {
@@ -171,7 +164,6 @@ export default {
 
         .basic {
             display: flex;
-            height: 160px;
             border-bottom: 1px solid #d7d7d7;
             padding: 10px 20px;
 
@@ -195,8 +187,7 @@ export default {
     }
 
     .button {
-        margin-left: 30px;
-        margin-top: 16px;
+        margin: 10px 30px;
     }
 }
 </style>

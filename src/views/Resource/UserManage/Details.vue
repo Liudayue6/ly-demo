@@ -74,7 +74,6 @@ export default {
 
 <style lang="less" scoped>
 .title {
-    margin-top: 65px;
     line-height: 80px;
     background-color: #fff;
     font-size: 16px;
@@ -86,8 +85,6 @@ export default {
 }
 
 .content {
-    width: 1190px;
-    margin: 0 auto;
     height: 500px;
     background-color: #fff;
     border-radius: 4px;

@@ -39,12 +39,12 @@
             <router-link to="/add-user" style="color: #fff">
               <el-button type="primary"><i class="el-icon-document-add"></i>创建用户</el-button>
             </router-link>
-            <el-upload style="display: inline-block;" multiple accept=".xls"><el-button style="margin-left: 10px;"><i
+            <el-upload style="display: inline-block;" multiple accept=".xls"><el-button class="gap"><i
                   class="el-icon-upload2"></i>批量导入</el-button></el-upload>
-            <el-button style="margin-left: 10px;"><i class="el-icon-download"></i>下载模板</el-button>
-            <el-button><i class="el-icon-download"></i>批量导出</el-button>
+            <el-button class="gap" @click="handleDownload"><i class="el-icon-download"></i>下载模板</el-button>
+            <el-button :disabled="selectControl"><i class="el-icon-download"></i>批量导出</el-button>
             <!-- 批量管理 -->
-            <el-dropdown style="margin-left: 10px;" @command="handleCommand">
+            <el-dropdown class="gap" @command="handleCommand" :disabled="selectControl">
               <el-button>批量管理<i class="el-icon-arrow-down el-icon--right"></i></el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="a">批量删除</el-dropdown-item>
@@ -52,38 +52,39 @@
                 <el-dropdown-item command="c">批量启用</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-button class="filter">筛选查询<i class="el-icon-arrow-up"></i></el-button>
+            <el-button class="filter" @click="searchControl">
+              筛选查询<i class="el-icon-arrow-up el-icon--right" v-if="!isShow"></i>
+              <i class="el-icon-arrow-down el-icon--right" v-else></i>
+            </el-button>
           </div>
           <!-- 搜索区域 -->
-          <div class="search">
-            <el-select v-model="value1" placeholder="请选择账号状态" style="width: 160px; margin-left: 249px" clearable>
+          <div class="search" :class="{ show: isShow }">
+            <el-select v-model="value1" placeholder="请选择账号状态" clearable>
               <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
-            <el-select v-model="value2" placeholder="请选择账号角色" style="width: 160px; margin-left: 8px" clearable>
+            <el-select v-model="value2" placeholder="请选择账号角色" clearable>
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
-            <el-input placeholder="搜索用户姓名/账号名称" suffix-icon="el-icon-search" v-model="input"
-              style="width: 200px; margin-left: 8px">
+            <el-input placeholder="搜索用户姓名/账号名称" suffix-icon="el-icon-search" v-model="input" style="width: 200px;">
             </el-input>
           </div>
           <!-- 表格区域 -->
           <div class="table">
             <!-- 表格 -->
-            <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark"
-              @selection-change="handleSelectionChange">
-              <el-table-column type="selection" width="55"> </el-table-column>
-              <el-table-column prop="userName" label="用户姓名" width="100" show-overflow-tooltip> </el-table-column>
-              <el-table-column prop="nickName" label="账号名称" width="120" show-overflow-tooltip></el-table-column>
-              <el-table-column prop="role" label="账号角色" width="140" show-overflow-tooltip> </el-table-column>
+            <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" @selection-change="handleChange">
+              <el-table-column type="selection" width="60"> </el-table-column>
+              <el-table-column prop="userName" label="用户姓名" show-overflow-tooltip> </el-table-column>
+              <el-table-column prop="nickName" label="账号名称" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="role" label="账号角色" show-overflow-tooltip> </el-table-column>
               <el-table-column prop="status" label="账号状态" width="100">
                 <template slot-scope="scope">
                   <el-tag :type="scope.row.status === '禁用' ? 'warning' : 'success'" disable-transitions>{{
                     scope.row.status }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" fixed="right" width="300">
                 <template slot-scope="scope">
                   <el-button size="medium" type="text" @click="handleCheck(scope.$index, scope.row)">查看</el-button>
                   <el-button size="medium" @click="handleEdit(scope.$index, scope.row)" type="text">编辑</el-button>
@@ -99,14 +100,11 @@
             </el-table>
           </div>
           <!-- 分页 -->
-          <MyPagination @changePage="changePage"></MyPagination>
+          <MyPagination></MyPagination>
         </div>
       </div>
-      <!-- 编辑弹窗 -->
-      <EditDialog ref="dialogEdit"></EditDialog>
-      <AddDialog ref="dialogAdd"></AddDialog>
-      <RemoveDialog ref="dialogRemove"></RemoveDialog>
-      <UserDialog ref="dialogUser" :title="title" :fontColor="fontColor"></UserDialog>
+      <!-- 弹窗 -->
+      <UserDialog ref="dialogUser" :title="title" :fontColor="fontColor" :text="text"></UserDialog>
     </div>
   </div>
 </template>
@@ -114,9 +112,6 @@
 <script>
 import MyPagination from '../../../components/MyPagination.vue';
 import tableData from '../../../mock/tableData.js';
-import EditDialog from './EditDialog.vue';
-import AddDialog from './AddDialog.vue';
-import RemoveDialog from './RemoveDialog.vue';
 import UserDialog from './UserDialog.vue';
 
 // let id = 1000;
@@ -124,9 +119,6 @@ import UserDialog from './UserDialog.vue';
 export default {
   components: {
     MyPagination,
-    EditDialog,
-    AddDialog,
-    RemoveDialog,
     UserDialog
   },
   data() {
@@ -196,8 +188,11 @@ export default {
       },
       data: JSON.parse(JSON.stringify(data)),
       title: "删除",
+      text: "",
       fontColor: "red",
-      input: ""
+      input: "",
+      selectControl: true,
+      isShow: false,
     };
   },
   methods: {
@@ -226,13 +221,15 @@ export default {
       this.$refs.dialogUser.dialogFormVisible = true;
       this.title = "禁用"
       this.fontColor = "orange"
+      this.text = "确定要对所选中的用户账号操作"
     },
     /* 启用操作 */
     start(row) {
       // row.status = '启用'
       this.$refs.dialogUser.dialogFormVisible = true;
       this.title = "启用"
-      this.fontColor = "#67c7b3"
+      this.fontColor = "#67c7b3",
+        this.text = "确定要对所选中的用户账号操作"
     },
     /* 用户删除操作 */
     handleDelete(index, row) {
@@ -240,7 +237,8 @@ export default {
       // this.tableData.splice(index, 1)
       this.$refs.dialogUser.dialogFormVisible = true;
       this.title = "删除"
-      this.fontColor = "red"
+      this.fontColor = "red",
+        this.text = "确定要对所选中的用户账号操作"
     },
     /* 树形控件 */
     filterNode(value, data) {
@@ -250,11 +248,13 @@ export default {
     /* 编辑组织 */
     edit(data) {
       // console.log(data);
-      this.$refs.dialogEdit.dialogFormVisible = true;
+      this.$refs.dialogUser.dialogFormVisible = true;
+      this.title = "编辑组织"
     },
     /* 添加组织 */
     append(data) {
-      this.$refs.dialogAdd.dialogFormVisible = true;
+      this.$refs.dialogUser.dialogFormVisible = true;
+      this.title = "添加组织"
       // const newChild = { id: id++, label: 'testtest', children: [] };
       // if (!data.children) {
       //   this.$set(data, 'children', []);
@@ -263,7 +263,10 @@ export default {
     },
     /* 删除组织 */
     remove(node, data) {
-      this.$refs.dialogRemove.dialogFormVisible = true;
+      this.$refs.dialogUser.dialogFormVisible = true;
+      this.title = "删除"
+      this.fontColor = "red"
+      this.text = "此组织及其下方组织和人员将一并删除，确定要操作"
       // const parent = node.parent;
       // const children = parent.data.children || parent.data;
       // const index = children.findIndex(d => d.id === data.id);
@@ -280,16 +283,33 @@ export default {
         this.$refs.dialogUser.dialogFormVisible = true;
         this.title = "批量删除"
         this.fontColor = "red"
+        this.text = "确定要对所选中的用户账号操作"
       } else if (command === "b") {
         this.$refs.dialogUser.dialogFormVisible = true;
         this.title = "批量禁用"
         this.fontColor = "orange"
+        this.text = "确定要对所选中的用户账号操作"
       } else {
         this.$refs.dialogUser.dialogFormVisible = true;
         this.title = "批量启用"
         this.fontColor = "#67c7b3"
+        this.text = "确定要对所选中的用户账号操作"
       }
-    }
+    },
+    /* 表格选择项发生变化 */
+    handleChange() {
+      if (this.$refs.multipleTable.selection.length) {
+        this.selectControl = false
+      } else {
+        this.selectControl = true
+      }
+      console.log(this.$refs.multipleTable.selection);
+    },
+    /* 筛选查询显示和隐藏 */
+    searchControl() {
+      this.isShow = !this.isShow
+    },
+    /* 下载mob */
   },
   /* 树形控件输入过滤 */
   watch: {
@@ -302,11 +322,10 @@ export default {
 
 <style lang='less' scoped>
 .user-manage {
-  background-color: #f0f2f5;
+  width: 100%;
 
   .outer-container {
-    width: 100%;
-    margin-top: 30px;
+    min-width: 1150px;
 
     .title {
       line-height: 60px;
@@ -319,10 +338,10 @@ export default {
     }
 
     .inner-container {
-      height: 65vh;
+      // height: 70vh;
       background-color: #fff;
       display: flex;
-      padding: 25px 20px 50px;
+      padding: 25px 20px 30px;
       border-radius: 4px;
 
       .organ {
@@ -353,7 +372,13 @@ export default {
         flex: 1;
         margin-left: 20px;
         overflow: hidden;
+
         .button {
+          margin-bottom: 20px;
+
+          .gap {
+            margin-left: 10px;
+          }
 
           i {
             margin-right: 2px;
@@ -365,12 +390,23 @@ export default {
         }
 
         .search {
-          margin: 20px 0 10px 0;
+          display: flex;
+          justify-content: flex-end;
+          transition: all 0.3s;
+
+          .el-select {
+            margin-right: 10px;
+            width: 160px;
+          }
+        }
+
+        .show {
+          display: none;
         }
 
         .table {
-          width: 100%;
-          border:1px solid #ebeef5;
+          margin-top: 20px;
+          border: 1px solid #ebeef5;
           padding: 0 10px;
         }
       }
