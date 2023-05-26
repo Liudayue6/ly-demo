@@ -42,6 +42,10 @@ export default {
 .layout {
     width: 100%;
     .head {
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        right: 0;
         line-height: 8vh;
         background-color: #2A4C45;
 
@@ -63,22 +67,28 @@ export default {
 
     .mainBody {
         width: 100%;
-        display: flex;
         height: 92vh;
+        padding-top: 8vh;
 
         .menu {
             background: #285450;
             padding-top: 50px;
+            position: fixed;
+            top: 8vh;
+            bottom: 0;
+            z-index: 999;
         }
 
         .content {
             width: calc(100% - 280px);
             margin: 30px 40px;
             transition: all 0.3s;
+            padding-left: 200px;
         }
 
         .isActive {
             margin: 30px 100px;
+            padding-left: 64px;
         }
     }
 }</style>

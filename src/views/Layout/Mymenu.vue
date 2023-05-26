@@ -10,42 +10,21 @@
     <!-- 菜单栏 -->
     <el-menu :default-active="$route.meta.name" class="el-menu-vertical-demo" background-color="#285450" text-color="#fff"
       router :collapse="isCollapse">
-      <el-submenu index="/">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>资源管理</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="user" :route="{path:'/user-manage'}">
-            <span slot="title" style="margin-left:20px;">用户管理</span>
-          </el-menu-item>
-          <el-menu-item index="que" :route="{path:'/que-manage'}">
-            <span slot="title" style="margin-left:20px;">试题管理</span>
-          </el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-menu-item index="train" :route="{path:'/train'}">
-        <i class="el-icon-menu"></i>
-        <span slot="title">实训管理</span>
-      </el-menu-item>
-      <el-menu-item index="plan" :route="{path:'/plan'}">
-        <i class="el-icon-document"></i>
-        <span slot="title">训练计划管理</span>
-      </el-menu-item>
-      <el-menu-item index="synthesis" :route="{path:'/synthesis'}">
-        <i class="el-icon-setting"></i>
-        <span slot="title">综合管理</span>
-      </el-menu-item>
+      <MenuContent :menuList="$store.state.menuData"></MenuContent>
     </el-menu>
   </div>
 </template>
 
 <script>
+import MenuContent from './MenuContent.vue'
 export default {
+  components: {
+    MenuContent
+  },
   props: {
     isCollapse: {
       type: Boolean,
-      default:false
+      default: false
     }
   },
   methods: {
@@ -53,7 +32,10 @@ export default {
       //点击切换按钮的时候 修改父组件的数据   isCollapse
       this.$emit("changeCollapse");
     }
-  }
+  },
+  // created(){
+  //   console.log(this.$store.state.menuData);
+  // }
 };
 </script>
 
@@ -78,14 +60,6 @@ export default {
   }
 }
 
-.el-menu {
-  border-right: 0;
-
-  .is-active {
-    background: #0F352D !important;
-    color: #fff !important;
-  }
-}
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;

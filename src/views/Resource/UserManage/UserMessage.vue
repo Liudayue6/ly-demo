@@ -44,17 +44,17 @@
 </template>
 
 <script>
-import tableData from '../../../mock/tableData.js';
+import userData from '../../../mock/userData.js';
 export default {
     data() {
         return {
-            tableData,
+            userData,
             form: {
                 userName: '',
                 number: '',
                 nickName: '',
                 role: [],
-                belong: [],
+                belong: [''],
                 passwword: ''
             },
             rules: {
@@ -76,8 +76,8 @@ export default {
                     value: 'zhan',
                     label: '站',
                     children: [{
-                        alue: 'zhan',
-                        label: 'gy-2一组',
+                        value: 'lyzhan',
+                        label: 'ly-2一组',
                     }]
                 }, {
                     value: 'hxyzhan',
@@ -120,11 +120,10 @@ export default {
     },
     created() {
         if (this.$route.query.title === "编辑用户") {
-            // console.log(tableData);
-            // console.log(this.$route.query.id);
-            const userData = this.tableData.find(item => item.id == this.$route.query.id)
             // console.log(userData);
-            this.form = userData
+            // console.log(this.$route.query.id);
+            const userMessage = this.userData.find(item => item.id == this.$route.query.id)
+            this.form = userMessage
         }
     }
 }

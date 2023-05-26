@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '../views/Layout/index.vue'
 import Resource from '../views/Resource/index.vue'
+import Login from '../views/Login/index.vue'
 //异步
 const Train = () => import('../views/Train/Train.vue')
 const Plan = () => import('../views/Plan/Plan.vue')
@@ -17,25 +18,31 @@ const routes = [
   {
     path: '',
     component: Layout,
+    meta: {
+      isLogin: true
+    },
     children: [
       {
         path: '/',
-        redirect: '/user-manage'
+        redirect: '/Resource'
       },
       {
         path: '/Resource',
         name: 'Resource',
         component: Resource,
-        redirect: '/user-manage',
+        meta: {
+          name: "resource"
+        },
+        redirect: '/Resource/user-manage',
         children: [
           {
-            path: '/user-manage',
+            path: 'user-manage',
             component: UserManage,
             meta: {
               name: "user"
             }
           }, {
-            path: '/que-manage',
+            path: 'que-manage',
             component: QueManage,
             meta: {
               name: "que"
@@ -84,7 +91,12 @@ const routes = [
         }
       }
     ]
-  }
+  },
+  {
+    path: '/login',
+    name:'Login',
+    component: Login
+  },
 ]
 
 const router = new VueRouter({

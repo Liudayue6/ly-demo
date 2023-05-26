@@ -22,7 +22,7 @@
                     <li>用户名称：<span>{{ message.userName }}</span></li>
                     <li>账号角色：<span>{{ roleMessage }}</span></li>
                     <li>人员编号：<span>{{ message.number }}</span></li>
-                    <li>账号所属：<span>{{ message.role }}</span></li>
+                    <li>账号所属：<span>{{ message.belongName }}</span></li>
                     <li>账号状态：<span>{{ message.status }}</span></li>
                     <li>账号名称：<span>{{ message.nickName }}</span></li>
                 </ul>
@@ -42,12 +42,12 @@
 </template>
 
 <script>
-import tableData from '../../../mock/tableData.js';
+import userData from '../../../mock/userData.js';
 export default {
     data() {
         return {
             message: {},
-            tableData
+            userData
         }
     },
     computed: {
@@ -56,7 +56,8 @@ export default {
         }
     },
     created() {
-        this.message = this.tableData.find(item => item.id == this.$route.query.id)
+        this.message = this.userData.find(item => item.id == this.$route.query.id)
+        console.log(this.message);
     },
     methods:{
         /* 返回操作 */
