@@ -7,8 +7,8 @@
                     <span>{{ item.title }}</span>
                 </template>
                 <el-menu-item-group>
-                    <menuItem :menuList="item.children">
-                    </menuItem>
+                    <MenuItem :menuList="item.children">
+                    </MenuItem>
                 </el-menu-item-group>
             </el-submenu>
             <el-menu-item :index="item.name" :route="{ path: item.path }" v-else>
@@ -22,16 +22,16 @@
 
 <script>
 export default {
-    name: 'menuItem',
+    name: 'MenuItem',
     props: {
         menuList: {
             type: Array,
             default: () => []
         }
     },
-    created() {
-        console.log('hhh', menuList);
-    }
+    // created() {
+    //     console.log('hhh', menuList);
+    // }
 }
 </script>
 

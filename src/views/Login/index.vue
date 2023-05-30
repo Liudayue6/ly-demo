@@ -65,7 +65,7 @@ export default {
     top: 0;
     bottom: 0;
     right: 0;
-    background: #104468;
+    background: #2a4c45;
 
     .login-form {
         position: relative;
